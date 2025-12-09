@@ -5,7 +5,8 @@ class Settings(BaseSettings):
     Settings: 환경변수 및 기타 config 불러옴
     References: https://docs.pydantic.dev/latest/concepts/pydantic_settings/#hide-none-type-values
     """
-    data_path: str # 데이터 저장 루트경로
+    data_path: str = "/var/fddata" # 데이터 저장 루트경로
+    tz: str = "Asia/Seoul" # Timezone
     # .env파일 매핑하도록 설정
     # 우선순위: 시스템 환경변수 > .env이므로 유의
     model_config = SettingsConfigDict(
