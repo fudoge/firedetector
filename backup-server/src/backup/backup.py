@@ -1,47 +1,87 @@
 from multiprocessing import Queue, current_process
+from queue import Empty
+from datetime import datetime, timedelta
 import cv2
+import pytz
 import numpy as np
+import os
 
 from src.config.config import settings
+
+timezone = pytz.timezone(settings.tz)
+workdir = os.path.join(settings.data_path, "videos")
+print(workdir)
 
 def video_worker(queue: Queue):
     """
     Queue로부터 이미지들을 consume하여 비디오 생성
-    
-    TODO: 30초단위로 끊어서 datapath에 저장
+    30초단위로 영상을 끊어서 저장
+    영상 저장 파일명: backup-<RFC3339 timestamp>.mp4
     """
     print(f"[Worker] 가동 시작, PID:{current_process().pid}")
     
-    workdir = settings.data_path + "/video"
-    video_name = "test.mp4"
-    first = True
-    while True:
-        try:
-            raw = queue.get()
+    try:
+        while True:
+            # 첫 프레임여부 및 시작 시간 초기화
+            # 시간 시간은 None으로 하는 이유는, 실제 첫 프레임 수신 시에 start_time을 재설저아혀 더 정확한 start_time을 맞출 수 있도록 하기위함
+            first = True
+            start_time = None
+            while True:
+                try:
+                    # 큐에서 프레임 이미지를 수신. 0.1초 타임아웃을 넣어 무기한 대기 방지.
+                    raw = queue.get(timeout=0.1)
+                except Empty:
+                    # 타임아웃나고 큐가 비어있다면
+                    # 만약 30초 청크가 지나면, 그만두기
+                    if start_time is not None and datetime.now(timezone) >= start_time + timedelta(seconds=30):
+                        break
+                    # 이외는 무시하고 다시 기다려보기..
+                    continue
             
-            if raw is None:
-                print(f"[Worker] 종료 신호 수신")
-                break
+                # None을 큐로부터 받으면, 종료(main.py 참고)
+                if raw is None:
+                    print(f"[Worker] 종료 신호 수신")
+                    return
+
+                # 바이트 이미지 디코딩..
+                img = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
+                if img is None:
+                    print("[Worker] 이미지 디코딩 실패")
+                    continue
             
-            img = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
-            if img is None:
-                print("[Worker] 이미지 디코딩 실패")
-                continue
-        
-            if first:
-                height, width, layer = img.shape
-                video = cv2.VideoWriter(
-                    video_name,
-                    cv2.VideoWriter_fourcc(*"mp4v"),
-                    30,
-                    (width, height)
-                )
-                first = False
-            print("프레임 수신 완료!")
-            video.write(img)
-        except KeyboardInterrupt:
-            # SIGINT를 받더라도, 무시. 대신 None을 큐로부터 입력받으면 종료되도록
-            pass
-        finally:
+                # 첫 프레임일 경우, 시간 초기화 및 videoWriter 초기화.
+                if first:
+                    start_time = datetime.now(timezone)
+                    video_name = os.path.join(workdir, f"backup-{start_time.isoformat()}.mp4")
+                    height, width, _ = img.shape
+                    video = cv2.VideoWriter(
+                        video_name,
+                        cv2.VideoWriter_fourcc(*"mp4v"),
+                        30,
+                        (width, height)
+                    )
+                    first = False
+
+                # 시간 지나면, 관둠
+                if datetime.now(timezone) >= start_time + timedelta(seconds=30):
+                    break
+
+                # 비디오에 프레임 추가
+                video.write(img)
+
+            # 영상 파일 Flush
             if video is not None:
+                print(f"[Worker] video saved: {video_name}")
                 video.release()
+                video = None # 혹시모를 중복 release()방지
+
+    # SIGINT 조용히 받기(stacktrace 출력 방지)
+    except KeyboardInterrupt:
+        pass
+
+    # 워커 종료 전, 혹시라도 저장못한 영상이 있다면 저장.
+    finally:
+        if video is not None:
+            print(f"[Worker] video saved: {video_name}")
+            video.release()
+            video = None # 혹시모를 중복 release() 방지

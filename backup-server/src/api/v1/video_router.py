@@ -15,8 +15,7 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             # 이미지를 바이트로 수신
             data = await websocket.receive_bytes()
-            # TODO: 이미지를 Consumer에게 전달
-            print("Image received.")
+            # 이미지를 Consumer에게 전달
             queue.put(data)
     except WebSocketDisconnect:
         print("클라이언트 연결 종료")
