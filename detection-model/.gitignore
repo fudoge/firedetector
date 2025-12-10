@@ -1,0 +1,33 @@
+# --- Python & Virtual Env ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+fire_env/
+venv/
+env/
+.pytest_cache/
+
+# --- Runtime Logs & Data ---
+# 실행 중 생성되는 로그 데이터 제외
+fire_events.json
+animal_events.json
+*.log
+
+# --- IDE & OS Settings ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Model Files ---
+# 다운로드 가능한 기본 YOLO 모델은 제외
+yolov8n.pt
+yolov8s.pt
+yolov8m.pt
+yolov8l.pt
+yolov8x.pt
+
+# 학습된 커스텀 모델은 포함 (단, 100MB 초과 시 Git LFS 필요)
+# 만약 best.pt도 제외하고 싶다면 아래 주석을 해제하세요
+# fireModel/*.pt
