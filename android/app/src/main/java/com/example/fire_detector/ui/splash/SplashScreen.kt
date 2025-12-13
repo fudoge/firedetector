@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,8 +40,8 @@ fun SplashScreen(
             .background(
                 Brush.linearGradient(
                     colors = listOf(
-                        Color(0xFFFF6A00), // 주황
-                        Color(0xFFD60000)  // 빨강
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.secondary,
                     )
                 )
             ),

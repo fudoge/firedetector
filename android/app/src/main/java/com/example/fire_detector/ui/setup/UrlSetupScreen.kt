@@ -32,7 +32,7 @@ fun UrlSetupScreen(
                 .height(140.dp)
                 .background(
                     Brush.horizontalGradient(
-                        listOf(Color(0xFFFF7A00), Color(0xFFE60000))
+                        listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
                     )
                 )
                 .padding(20.dp),
