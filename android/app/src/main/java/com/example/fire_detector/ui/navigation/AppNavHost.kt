@@ -10,12 +10,15 @@ import com.example.fire_detector.data.UrlDataStore
 import com.example.fire_detector.ui.dashboard.DashboardScreen
 import com.example.fire_detector.ui.setup.UrlSetupScreen
 import com.example.fire_detector.ui.splash.SplashScreen
+import com.example.fire_detector.ui.alarm.AlarmScreen
+import com.example.fire_detector.ui.alarm.AlarmItem
 import kotlinx.coroutines.launch
 
 sealed class Route(val route: String) {
     object Splash : Route("splash")
     object Setup : Route("setup")
     object Dashboard : Route("dashboard")
+    object  Alarm : Route("alarm")
 }
 
 @Composable
@@ -36,7 +39,7 @@ fun AppNavHost(
         modifier = modifier
     ) {
 
-        // 1️⃣ Splash
+        // Splash
         composable(Route.Splash.route) {
             SplashScreen(
                 onResult = { _ ->
@@ -52,7 +55,7 @@ fun AppNavHost(
             )
         }
 
-        // 2️⃣ URL 설정 (초기 + 설정 공용)
+        // URL 설정 (초기 + 설정 공용)
         composable(Route.Setup.route) {
             UrlSetupScreen(
                 initialUrl = savedUrl ?: "",
@@ -71,13 +74,38 @@ fun AppNavHost(
             )
         }
 
-        // 3️⃣ Dashboard (WebView)
+        // Dashboard (WebView)
         composable(Route.Dashboard.route) {
             DashboardScreen(
                 dashboardUrl = savedUrl ?: "",
-                onAlarmClick = {},
+                onAlarmClick = {
+                    navController.navigate(Route.Alarm.route)
+                },
                 onSettingClick = {
                     navController.navigate(Route.Setup.route)
+                }
+            )
+        }
+
+        // Alarm 화면
+        composable(Route.Alarm.route) {
+            // 지금은 더미 데이터
+            val alarms = listOf(
+                AlarmItem(
+                    id = 1,
+                    title = "화재 감지",
+                    message = "화재가 감지되었습니다.",
+                    time = "2024-12-12 14:23"
+                )
+            )
+
+            AlarmScreen(
+                alarms = alarms,
+                onClose = { navController.popBackStack() },
+                onAlarmClick = {
+                    navController.navigate(Route.Dashboard.route) {
+                        popUpTo(Route.Alarm.route) { inclusive = true }
+                    }
                 }
             )
         }
