@@ -1,18 +1,12 @@
 package com.example.fire_detector.ui.splash
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,12 +20,12 @@ import com.example.fire_detector.ui.icons.Fire
 
 @Composable
 fun SplashScreen(
-    onTimeout: () -> Unit,
-    durationMillis: Long = 2500L
+    onResult: (hasUrl: Boolean) -> Unit,
+    durationMillis: Long = 1500L
 ) {
     LaunchedEffect(Unit) {
         delay(durationMillis)
-        onTimeout()
+        onResult(true) // 실제 판단은 NavHost에서
     }
 
     Box(
@@ -39,9 +33,9 @@ fun SplashScreen(
             .fillMaxSize()
             .background(
                 Brush.linearGradient(
-                    colors = listOf(
+                    listOf(
                         MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.secondary,
+                        MaterialTheme.colorScheme.secondary
                     )
                 )
             ),
@@ -58,7 +52,7 @@ fun SplashScreen(
             ) {
                 Icon(
                     imageVector = Fire,
-                    contentDescription = "Fire icon",
+                    contentDescription = "Fire",
                     tint = Color.White,
                     modifier = Modifier.size(54.dp)
                 )
@@ -81,4 +75,5 @@ fun SplashScreen(
                 fontSize = 14.sp
             )
         }
-    }}
+    }
+}
