@@ -139,7 +139,7 @@ try:
                     if conf > max_fire_confidence:
                         max_fire_confidence = conf
                         
-                    label = f"🔥 {class_name} {conf}"
+                    label = f"{class_name.upper()} {conf}"
                     cv2.putText(frame, label, (x1, y1 - 10), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
@@ -214,7 +214,7 @@ try:
                         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
                         confidence = math.ceil(box.conf[0] * 100) / 100
-                        label = f"🐾 {class_name} {confidence}"
+                        label = f"{class_name.upper()} {confidence}"
                         cv2.putText(frame, label, (x1, y1 - 10), 
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
