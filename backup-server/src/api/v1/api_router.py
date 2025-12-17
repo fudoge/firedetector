@@ -4,6 +4,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, Response
 from fastapi.responses import FileResponse, RedirectResponse
 from sqlalchemy import except_
+
 from src.api.v1.deps import get_fcm_service, get_video_service
 from src.core.config import settings
 from src.schemas.fcm import TokenRequest
@@ -129,8 +130,8 @@ def register_token(
     FCM토큰 등록
     """
     try:
-        fcm_service.register_client(req.token)
-        return Response(status_code=201)
+        result = fcm_service.register_client(req.token)
+        return {"message": "registerd", "id": result.id}
     except Exception as e:
         logger.error(f"FCM토큰 저장 중 에러 발생: {e}")
 

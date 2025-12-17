@@ -1,6 +1,7 @@
 import logging
 
 from firebase_admin import messaging
+
 from src.core.config import settings
 
 logger = logging.getLogger("app")
@@ -15,9 +16,9 @@ class FCMService:
     def __init__(self, fcm_repo):
         self.fcm_repo = fcm_repo
 
-    def register_client(self, id, token):
+    def register_client(self, token):
         try:
-            self.fcm_repo.register(id, token)
+            return self.fcm_repo.register(token)
         except Exception as e:
             raise e
 
