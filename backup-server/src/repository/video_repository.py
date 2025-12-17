@@ -41,7 +41,7 @@ class VideoRepository:
         new_video_key = f"videos/fp-backup-{pure_name}.mp4"  # 새로운 video key 생성
         new_thumb_key = f"thumbs/fp-thumb-{pure_name}.jpeg"  # 새로운 thumbnail key 생성
         video.type = "FP"
-        video.name = f"[FP] + {pure_name}"
+        video.name = f"[FP] {pure_name}"
         video.file_path = new_video_key
         video.thumbnail_path = new_thumb_key
         self.db.commit()
