@@ -15,6 +15,8 @@ class FCMRepository:
         new_device = FCMData(token=token)
         self.db.add(new_device)
         self.db.commit()
+        self.db.refresh(new_device)
+        return new_device
 
     def getall(self):
         fcm_datas = self.db.query(FCMData).all()
