@@ -36,4 +36,4 @@ class FCMService:
                 logger.info(f"response from FCM: {response}")
 
         except Exception as e:
-            raise e
+            logger.warning(f"푸시 알림 보내기 실패: {e}")
