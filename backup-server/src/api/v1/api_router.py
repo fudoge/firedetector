@@ -3,14 +3,18 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, Response
 from fastapi.responses import FileResponse, RedirectResponse
+from sqlalchemy import except_
 
-from src.api.v1.deps import get_video_service
+from src.api.v1.deps import get_fcm_service, get_video_service
 from src.core.config import settings
+from src.schemas.fcm import PushRequest, TokenRequest
+from src.services.fcm_service import FCMService
 from src.services.video_service import VideoService
 
-##############################
+##################################
 # Video 메타데이터 REST API 영역 #
-##############################
+# + FCM 로직 영역                #
+##################################
 
 logger = logging.getLogger("app")
 logger.setLevel(settings.log_level)
@@ -117,3 +121,28 @@ def fp_report(id, video_service: VideoService = Depends(get_video_service)):
         logger.error(f"에러 발생: {e}")
         raise e
 
+
+@router.post("/register-token")
+def register_token(
+    req: TokenRequest, fcm_service: FCMService = Depends(get_fcm_service)
+):
+    """
+    FCM토큰 등록
+    """
+    try:
+        fcm_service.register_client(req.token)
+        return Response(status_code=201)
+    except Exception as e:
+        logger.error(f"FCM토큰 저장 중 에러 발생: {e}")
+
+
+@router.post("/notify")
+def notify_client(fcm_service: FCMService = Depends(get_fcm_service)):
+    """
+    FCM 알림 전송
+    """
+    try:
+        fcm_service.notify_client()
+        return Response(status_code=200)
+    except Exception as e:
+        logger.error(f"FCM알림 호출 중 에러 발생: {e}")

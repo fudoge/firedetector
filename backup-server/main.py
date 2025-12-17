@@ -5,8 +5,8 @@ from multiprocessing import Process, Queue, current_process
 from fastapi import FastAPI
 from sqlalchemy.orm import sessionmaker
 
-import src.api.v1.backup_router as backup_router
-import src.api.v1.video_router as video_router
+import src.api.v1.api_router as api_router
+import src.api.v1.ws_router as ws_router
 from src.backup.backup import video_worker
 from src.core.config import settings
 from src.core.logger import clear_uvicorn_logger, new_logger
@@ -74,8 +74,8 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(JsonLogMiddleware)
 
 # 요청 라우터 붙이기
-app.include_router(backup_router.router)
-app.include_router(video_router.router)
+app.include_router(ws_router.router)
+app.include_router(api_router.router)
 
 
 @app.get("/")

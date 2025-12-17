@@ -250,3 +250,6 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# FCM Data
+backup-server/serviceAccountKey.json
