@@ -142,7 +142,7 @@ class VideoService:
             new_thumb_key,
         ) = self.video_repo.transfer_type_to_fp(id)
         video_path = os.path.join(settings.data_path, new_video_key)
-        thumbnail_path = os.path.join(settings.data_path, new_video_key)
+        thumbnail_path = os.path.join(settings.data_path, new_thumb_key)
         os.rename(os.path.join(settings.data_path, old_video_key), video_path)
         os.rename(os.path.join(settings.data_path, old_thumb_key), thumbnail_path)
         logger.info(f"비디오 파일명 이름 변경 완료: {old_video_key} -> {new_video_key}")
@@ -158,7 +158,7 @@ class VideoService:
                         Key=new_video_key,
                     )
                 s3.delete_object(
-                    Bucket=settings.r2_fp_bucket_name,
+                    Bucket=settings.r2_blackbox_bucket_name,
                     Key=new_video_key,
                 )
                 logger.info(f"버킷 이동 완료: {old_video_key} -> {new_video_key}")
@@ -172,7 +172,7 @@ class VideoService:
                         ContentType="image/jpeg",
                     )
                 s3.delete_object(
-                    Bucket=settings.r2_fp_bucket_name,
+                    Bucket=settings.r2_blackbox_bucket_name,
                     Key=new_thumb_key,
                 )
                 logger.info(f"버킷 이동 완료: {old_thumb_key} -> {new_thumb_key}")
