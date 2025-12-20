@@ -28,7 +28,7 @@ MSG_TYPE_GEMINI_RESULT = 0x04
 
 # 전역 설정
 HOST = os.getenv("YOLO_SERVER")
-PORT = 5005
+PORT = os.getenv("YOLO_PORT")
 QUEUE_SIZE = 2
 FIRE_ACTIVE_THRESHOLD = 30  # 화재 활성 판정 임계값 (초)
 

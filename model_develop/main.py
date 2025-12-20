@@ -217,7 +217,7 @@ def run_gemini_analysis_thread(frame_bgr):
 
 # 송신할 소켓 서버 설정
 HOST = os.getenv("BIND_ADDRESS")
-PORT = 5005
+PORT = int(os.getenv("BIND_PORT"))
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
