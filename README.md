@@ -16,7 +16,15 @@
 | 20225123| 김성호 | 모델 이벤트 로직 개발, 프론트엔드 개발 |
 | 20225132 | 김인우 | LLM API 관리 및 참여 |
 
-## 🎯 주요 기능
+## 🔥 주요 기능
+- YOLO모델기반 화재 탐지
+- Gemini API를 통한 2차 검증
+- 실시간 대시보드 제공 
+- FCM을 통한 모바일 실시간 알림
+- 화재 1차감지시점부터 영상을 별도 백업저장(로컬 및 클라우드) -> 추후 보험 자료 등에 사용 가능
+- 오탐데이터 피드백 -> 추후 모델 보완에 사용
+
+### 🎯 화재 감지 시스템으로서의 차별점
 
 **"진짜 불인가요?" - YOLO + LLM 이중 검증**
 단순히 빨간색을 불로 인식하는 기존 Vision AI의 한계를 LLM 검증으로 극복했습니다.
@@ -87,8 +95,8 @@
 
 | 주요 구성 요소 | 설명 |
 | --- | --- |
-| 1. Edge Device | 카메라 영상 캡처 및 YOLO Lite 화재 특화 모델로 1차 의심 상황 포착 (Target: Raspberry Pi 4) |
-| 02. Backend Server | FastAPI 기반. LLM API(Gemini) 호출하여 2차 검증 수행 & 블랙박스 영상 저장 | 
+| 1. Edge Device | 카메라 영상 캡처 및 YOLO Lite 화재 특화 모델로 1차 의심 상황 포착 (Target: Raspberry Pi 4) & Gemini 2차 검증 |
+| 02. Backend Server | FastAPI 기반. 블랙박스 영상 저장 & 피드백 루프 구축 | 
 | 03. User Client | Android App (FCM 알림) & Web Dashboard (Streamlit 모니터링) |
 | 04. Cloudflare R2 Bucket | 백업 및 오탐신고 비디오 저장 아카이브 및 Pre-signed URL을 통한 임시 오브젝트 개방, Egress 비용 0원의 비용 효율적 백업 |
 
