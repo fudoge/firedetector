@@ -161,6 +161,7 @@ frontend
 - [Cloudflare R2 셋업 가이드](docs/setup-r2.md)
 - [백업 서버 셋업 가이드](docs/setup-backup-server.md)
 - [HeadScale 세팅 가이드](docs/setup-headscale.md)
+- [Streamlit 세팅 가이드](docs/setup-streamlit.md)
 
 ## 👨‍⚖️ License
 
